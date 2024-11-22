@@ -35,19 +35,6 @@ public class InventoryService {
         return sum == 0;
     }
 
-    public boolean isAllStockValid(List<Inventory> inventories) {
-        for (Inventory inv : inventories) {
-            if (!isStockValid(inv)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean isStockValid(Inventory inventory) {
-        return inventory.getStock() != 0;
-    }
-
     public Inventory getInventory(Inventory inv, Product product) {
         if (inv.getProduct().getName().equals(product.getName())) {
             return inv;

@@ -5,6 +5,7 @@ import java.util.List;
 import vendingmachine.domain.Inventory;
 import vendingmachine.domain.Money;
 import vendingmachine.domain.Product;
+import vendingmachine.enums.ErrorMessage;
 
 public class InputParser {
     public static Money parseMoney(String input) {
@@ -18,15 +19,29 @@ public class InputParser {
         String regex = "[\\[\\]]";
         String[] inputSplit = input.replaceAll(regex, "")
                 .replaceAll(";", ",").split(",");
+
+        return isValidIndexInvetories(inputSplit);
+    }
+
+    static boolean isParsingOK(String inputOne, String inputTwo) {
+        return InputValidator.isParsingErrorOrNone(inputOne) && InputValidator.isParsingErrorOrNone(inputTwo);
+    }
+
+    static List<Inventory> isValidIndexInvetories(String[] inputSplit) {
         List<Inventory> inventories = new LinkedList<>();
-        for (int i = 0; i < inputSplit.length; i += 3) {
-            if (InputValidator.isParsingErrorOrNone(inputSplit[i + 1]) && InputValidator.isParsingErrorOrNone(
-                    inputSplit[i + 2])) {
-                inventories.add(new Inventory(new Product(inputSplit[i], Integer.parseInt(inputSplit[i + 1])),
-                        Integer.parseInt(inputSplit[i + 2])));
+        try {
+            for (int i = 0; i < inputSplit.length; i += 3) {
+                addInventory(inventories, inputSplit[i], inputSplit[i + 1], inputSplit[i + 2]);
             }
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(ErrorMessage.INVALID_INPUT.getErrorMessage());
         }
         return inventories;
     }
 
+    static void addInventory(List<Inventory> inventories, String one, String two, String three) {
+        if (isParsingOK(two, three)) {
+            inventories.add(new Inventory(new Product(one, Integer.parseInt(two)), Integer.parseInt(three)));
+        }
+    }
 }

@@ -33,30 +33,33 @@ public class VendingMachineController {
     }
 
     public void run() {
+        Map<Coin, Integer> coinAmount = getCoinAmount();
+        List<Inventory> inventories = inputInventoriesHandler();
+        Money money = getMoney();
+        // 현재 금액이 최저 금액보다 크거나 재고가 있는 경우
+        while (money.getMoney() >= inventoryService.getLowestPrice(inventories) && !inventoryService.isAllStockNotExist(
+                inventories)) {
+            String buyProduct = inputView.getBuyProducts();
+            outputView.printEnter();
+            money = purchaseProcess(buyProduct, money, inventories);
+            outputView.printPutMoney(money);
+        }
+        outputView.printChange(changeController.getChange(coinAmount, money));
+    }
+
+    public Map<Coin, Integer> getCoinAmount() {
         Map<Coin, Integer> coinAmount = moneyService.randomCoin(inputCoinAmountHandler());
         outputView.printEnter();
         outputView.printCoinAmount(coinAmount);
         outputView.printEnter();
+        return coinAmount;
+    }
 
-        List<Inventory> inventories = inputInventoriesHandler();
+    public Money getMoney() {
         Money money = inputMoneyHandler();
         outputView.printEnter();
         outputView.printPutMoney(money);
-
-        while (money.getMoney() >= inventoryService.getLowestPrice(inventories) && !inventoryService.isAllStockNotExist(
-                inventories)) {
-            // 현재 금액이 최저 금액보다 크거나 재고가 있는 경우
-            String buyProduct = inputView.getBuyProducts();
-            outputView.printEnter();
-
-            money = purchaseProcess(buyProduct, money, inventories);
-
-            // 투입 금액
-            outputView.printPutMoney(money);
-        }
-        
-        outputView.printChange(changeController.getChange(coinAmount, money));
-
+        return money;
     }
 
     public Money purchaseProcess(String buyProduct, Money money, List<Inventory> inventories) {
