@@ -16,4 +16,8 @@ public class Inventory {
     public int getStock() {
         return this.stock;
     }
+
+    public int setStock() {
+        return this.stock--;
+    }
 }

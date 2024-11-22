@@ -3,18 +3,18 @@ package vendingmachine.service;
 import java.util.List;
 import vendingmachine.domain.Inventory;
 import vendingmachine.domain.Money;
-import vendingmachine.domain.Product;
 
 public class InventoryService {
 
-    public Money purchase(Money money, Product product) {
-        if (product == null) {
+    public Money purchase(Money money, Inventory inventory) {
+        inventory.setStock();
+        if (inventory.getProduct() == null) {
             return null;
         }
-        if (money.getMoney() - product.getPrice() < 0) {
+        if (money.getMoney() - inventory.getProduct().getPrice() < 0) {
             return null;
         }
-        money.setMoney(money.getMoney() - product.getPrice());
+        money.setMoney(money.getMoney() - inventory.getProduct().getPrice());
         return money;
     }
 
