@@ -26,8 +26,6 @@ public class ChangeController {
                 remain -= c.getAmount();
                 change.replace(c, change.get(c) + 1);
                 coinAmount.replace(c, coinAmount.get(c) - 1);
-            } else {
-                break;
             }
         }
     }
