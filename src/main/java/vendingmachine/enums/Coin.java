@@ -15,4 +15,17 @@ public enum Coin {
     public int getAmount() {
         return this.amount;
     }
+
+    public static Coin getCoin(int amount) {
+        if (amount == 500) {
+            return COIN_500;
+        } else if (amount == 100) {
+            return COIN_100;
+        } else if (amount == 50) {
+            return COIN_50;
+        } else if (amount == 10) {
+            return COIN_10;
+        }
+        return null;
+    }
 }
